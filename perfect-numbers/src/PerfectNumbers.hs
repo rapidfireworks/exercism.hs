@@ -8,7 +8,6 @@ classify :: Int -> Maybe Classification
 classify n
   | n < 1
   = Nothing
-classify n
   | result > n
   = Just Abundant
   | result == n
@@ -20,10 +19,11 @@ classify n
 aliquotSum :: Int -> Int
 aliquotSum n
   | divMod n truncSqrt == (truncSqrt,  0)
-  = sumOfDivisors - truncSqrt
+  = sumOfFactors - truncSqrt
   | otherwise
-  = sumOfDivisors
+  = sumOfFactors
   where
     truncSqrt = (truncate . sqrt . fromIntegral) n
-    divisors = [x | x <- [2..truncSqrt], rem n x == 0]
-    sumOfDivisors = 1 + Foldable.foldl' (\x y -> x + y + div n y) 0 divisors
+    factors = [x | x <- [2..truncSqrt], rem n x == 0]
+    addFactorPair acc factor = acc + factor + div n factor
+    sumOfFactors = Foldable.foldl' addFactorPair 1 factors
