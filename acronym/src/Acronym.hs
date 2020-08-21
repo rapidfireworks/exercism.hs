@@ -1,22 +1,16 @@
 module Acronym (abbreviate) where
 
-import qualified Data.Char
+import qualified Data.Char as Char
 
 abbreviate :: String -> String
 abbreviate xs =
   let
-    abbr "" = ""
-    abbr (_:"") = ""
-    abbr (first:rest@(second:_))
-      | isAbbrSeparator first && Data.Char.isAlpha second
-      = Data.Char.toUpper second:abbr rest
-      | Data.Char.isLower first && Data.Char.isUpper second
-      = second:abbr rest
-      | otherwise
-      = abbr rest
+    isInitial prev curr =
+      (isSeparator prev && Char.isAlpha curr) ||
+      (Char.isLower prev && Char.isUpper curr)
 
-    isAbbrSeparator '-' = True
-    isAbbrSeparator '_' = True
-    isAbbrSeparator letter = Data.Char.isSpace letter
+    isSeparator '-' = True
+    isSeparator '_' = True
+    isSeparator letter = Char.isSpace letter
   in
-    abbr (' ':xs)
+    [Char.toUpper curr | (prev, curr) <- zip (' ':xs) xs, isInitial prev curr]
