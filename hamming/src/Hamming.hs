@@ -1,10 +1,15 @@
 module Hamming (distance) where
 
-import qualified Control.Applicative as Applicative
-import qualified Data.Foldable as Foldable
+import Control.Applicative (liftA2)
+import Data.Foldable (foldl')
+import Flow ((|>))
 
 distance :: String -> String -> Maybe Int
-distance xs = (Foldable.foldl' (Applicative.liftA2 (+)) (Just 0)) . (takeUntil (Nothing ==)) . (map diffScore) . (maybeZip xs)
+distance xs ys
+  = maybeZip xs ys
+  |> map diffScore
+  |> takeUntil (Nothing ==)
+  |> foldl' (liftA2 (+)) (Just 0)
 
 maybeZip :: [a] -> [a] -> [(Maybe a, Maybe a)]
 maybeZip [] [] = []
