@@ -4,12 +4,9 @@ import qualified Data.Char as Char
 import qualified Data.Set as Set
 
 isPangram :: String -> Bool
-isPangram = (numberOfAlphabets ==) . length . letterSet
+isPangram = (hasLetterSet (Set.fromList ['a'..'z'])) . (map Char.toLower)
 
-letterSet :: String -> Set.Set Char
-letterSet text
-  = Set.fromList [Char.toLower x | x <- text, isAlphabet x]
+hasLetterSet :: Set.Set Char -> String -> Bool
+hasLetterSet set text
+  = set == Set.fromList [x | x <- text, isAlphabet x]
   where isAlphabet x = Char.isAsciiLower x || Char.isAsciiUpper x
-
-numberOfAlphabets :: Int
-numberOfAlphabets = length ['a'..'z']
