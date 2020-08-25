@@ -1,12 +1,13 @@
 module CollatzConjecture (collatz) where
 
 collatz :: Integer -> Maybe Integer
-collatz = collatz 0
+collatz x
+  | x > 0 = Just (count 0 x)
+  | otherwise = Nothing
   where
-    collatz n x
-      | x < 1 = Nothing
-      | x == 1 = Just n
-      | r == 0 = collatz (n + 1) q
-      | otherwise = collatz (n + 1) (3 * x + 1)
+    count n 1 = n
+    count n y
+      | r == 0 = count (n + 1) q
+      | otherwise = count (n + 1) (3 * y + 1)
       where
-        (q, r) = quotRem x 2
+        (q, r) = quotRem y 2
