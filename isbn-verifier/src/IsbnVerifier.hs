@@ -1,5 +1,6 @@
 module IsbnVerifier (isbn) where
 
+import Data.Char (digitToInt)
 import Data.Function ((&))
 import Text.Regex.TDFA ((=~))
 
@@ -14,7 +15,7 @@ parse xs =
     regex = "\\`([[:digit:]])-?([[:digit:]]{3})-?([[:digit:]]{5})-?([[:digit:]X])\\'"
     (_, _, _, groups) = xs =~ regex :: (String, String, String, [String])
     readChar 'X' = 10
-    readChar x = read (x : [])
+    readChar x = digitToInt x
 
 validate :: [Int] -> Bool
 validate xs@([_, _, _, _, _, _, _, _, _, _]) =
