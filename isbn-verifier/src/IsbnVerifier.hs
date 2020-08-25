@@ -19,8 +19,7 @@ parse xs =
 
 validate :: [Int] -> Bool
 validate xs@([_, _, _, _, _, _, _, _, _, _]) =
-  zip [10, 9 .. 1] xs
-    & map (\(x, y) -> x * y)
+  zipWith (*) [10, 9 .. 1] xs
     & sum
     & (\x -> mod x 11 == 0)
 validate _ = False
