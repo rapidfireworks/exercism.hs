@@ -1,4 +1,26 @@
 module IsbnVerifier (isbn) where
 
+import Data.Function ((&))
+import Text.Regex.TDFA ((=~))
+
 isbn :: String -> Bool
-isbn = error "You need to implement this function."
+isbn = validate . parse
+
+parse :: String -> [Int]
+parse xs =
+  concat groups
+    & map readChar
+  where
+    regex = "\\`([[:digit:]])-?([[:digit:]]{3})-?([[:digit:]]{5})-?([[:digit:]X])\\'"
+    (_, _, _, groups) = xs =~ regex :: (String, String, String, [String])
+    readChar 'X' = 10
+    readChar x = read (x : [])
+
+validate :: [Int] -> Bool
+validate xs@([_, _, _, _, _, _, _, _, _, _]) =
+  zip [10, 9 .. 1] xs
+    & map (\(x, y) -> x * y)
+    & sum
+    & (\x -> mod x 11 == 0)
+validate _ = False
+
