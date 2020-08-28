@@ -7,12 +7,11 @@ number :: String -> Maybe String
 number xs =
   filter isNumber xs
     & stripCountryCode
-    >>= validateNanp
+    & validateNanp
 
-stripCountryCode :: String -> Maybe String
-stripCountryCode ('1' : ns) = Just ns
-stripCountryCode ns = Just ns
-stripCountryCode _ = Nothing
+stripCountryCode :: String -> String
+stripCountryCode ('1' : ns) = ns
+stripCountryCode ns = ns
 
 validateNanp :: String -> Maybe String
 validateNanp ns@([n1, _, _, n4, _, _, _, _, _, _])
