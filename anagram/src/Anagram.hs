@@ -1,19 +1,14 @@
 module Anagram (anagramsFor) where
 
 import Data.Char (toLower)
-import Data.Map (Map)
-import qualified Data.Map as Map (fromListWith)
+import qualified Data.List as List (sort)
 
 anagramsFor :: String -> [String] -> [String]
 anagramsFor xs xss = filter isAnagram xss
   where
-    (xsLower, xsFreq) = lowerFreq xs
-    isAnagram ys = xsLower /= ysLower && xsFreq == ysFreq
+    xsLower = map toLower xs
+    xsSorted = List.sort xsLower
+    isAnagram ys = xsLower /= ysLower && xsSorted == ysSorted
       where
-        (ysLower, ysFreq) = lowerFreq ys
-
-lowerFreq :: String -> (String, Map Char Int)
-lowerFreq xs = (lower, frequency)
-  where
-    lower = map toLower xs
-    frequency = Map.fromListWith (+) [(x, 1) | x <- lower]
+        ysLower = map toLower ys
+        ysSorted = List.sort ysLower
