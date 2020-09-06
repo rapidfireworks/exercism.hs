@@ -1,14 +1,15 @@
 module SecretHandshake (handshake) where
 
-import Data.Bits
+import Data.Bits (bit, testBit, (.&.))
 
 handshake :: Int -> [String]
 handshake n = do
   position <- positions
-  decode (n .&. (bit position))
+  let code = n .&. bit position
+  decode code
   where
     positions
-      | n .&. bit 4 /= 0 = [3, 2 .. 0]
+      | testBit n 4 = [3, 2 .. 0]
       | otherwise = [0 .. 3]
 
 decode :: Int -> [String]
