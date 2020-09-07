@@ -1,5 +1,6 @@
 module Luhn (isValid) where
 
+import Data.Char (isSpace)
 import Text.Read (readMaybe)
 
 isValid :: String -> Bool
@@ -8,21 +9,13 @@ isValid n = case (luhnSum n) of
   Nothing -> False
 
 luhnSum :: String -> Maybe Int
-luhnSum digits = do
-  parsed <- parse digits
-  case parsed of
-    xs@(_ : _ : _) -> return $ sum [clamp x | x <- zipWith (*) (cycle [1, 2]) $ reverse xs]
+luhnSum text = do
+  digits <- mapM readChar $ filter (not . isSpace) text
+  case digits of
+    -- NOTE: length digits > 1
+    (_ : _ : _) -> return $ dotProduct digits
     _ -> Nothing
   where
-    clamp x = if x < 10 then x else x - 9
-
-parse :: String -> Maybe [Int]
-parse text = do
-  digits <- mapM readChar text
-  return [digit | Right digit <- digits]
-
-readChar :: Char -> Maybe (Either Char Int)
-readChar letter = case (letter, readMaybe [letter]) of
-  (' ', _) -> Just (Left ' ')
-  (_, Just digit) -> Just (Right digit)
-  (_, Nothing) -> Nothing
+    readChar letter = readMaybe [letter]
+    luhnProduct x y = if p < 10 then p else p - 9 where p = x * y
+    dotProduct = sum . zipWith luhnProduct (cycle [1, 2]) . reverse
