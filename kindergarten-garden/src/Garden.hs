@@ -1,19 +1,34 @@
-module Garden
-    ( Plant (..)
-    , garden
-    , lookupPlants
-    ) where
+module Garden (Plant (..), garden, lookupPlants) where
 
-data Plant = Clover
-           | Grass
-           | Radishes
-           | Violets
-           deriving (Eq, Show)
+import Data.Map (Map)
+import Data.Map as Map (findWithDefault, fromList)
 
-data Garden = Dummy
+data Plant
+  = Clover
+  | Grass
+  | Radishes
+  | Violets
+  deriving (Eq, Show)
 
-garden :: [String] -> String -> Garden
-garden students plants = error "You need to implement this function."
+garden :: [String] -> String -> Map String [Plant]
+garden students = Map.fromList . zip students . divide . lines
 
-lookupPlants :: String -> Garden -> [Plant]
-lookupPlants student garden = error "You need to implement this function."
+lookupPlants :: String -> Map String [Plant] -> [Plant]
+lookupPlants student = Map.findWithDefault [] student
+
+divide :: [String] -> [[Plant]]
+divide rows | all ([] ==) rows = []
+divide rows = division : divide rest
+  where
+    division = do
+      row <- rows
+      letter <- take 2 row
+      toPlant letter
+    rest = map (drop 2) rows
+
+toPlant :: Char -> [Plant]
+toPlant 'C' = [Clover]
+toPlant 'G' = [Grass]
+toPlant 'R' = [Radishes]
+toPlant 'V' = [Violets]
+toPlant _ = []
