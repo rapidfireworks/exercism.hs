@@ -5,4 +5,5 @@ armstrong n | n < 0 = False
 armstrong n = armstrongSum == toInteger n
   where
     digits = show $ toInteger n
-    armstrongSum = sum [read [digit] ^ length digits | digit <- digits]
+    digitCount = length digits
+    armstrongSum = sum [read [digit] ^ digitCount | digit <- digits]
