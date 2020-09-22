@@ -1,37 +1,40 @@
-module ListOps
-  ( length
-  , reverse
-  , map
-  , filter
-  , foldr
-  , foldl'
-  , (++)
-  , concat
-  ) where
+{-# LANGUAGE BangPatterns #-}
 
-import Prelude hiding
-  ( length, reverse, map, filter, foldr, (++), concat )
+module ListOps (length, reverse, map, filter, foldr, foldl', (++), concat) where
+
+import Prelude hiding (concat, filter, foldr, length, map, reverse, (++))
 
 foldl' :: (b -> a -> b) -> b -> [a] -> b
-foldl' f z xs = error "You need to implement this function."
+foldl' _ !z [] = z
+foldl' f !z (x : xs) = foldl' f (f z x) xs
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr f z xs = error "You need to implement this function."
+foldr _ z [] = z
+foldr f z (x : xs) = f x $ foldr f z xs
 
 length :: [a] -> Int
-length xs = error "You need to implement this function."
+length xs = foldl' (flip $ const succ) 0 xs
 
 reverse :: [a] -> [a]
-reverse xs = error "You need to implement this function."
+reverse xs = _reverse xs []
+  where
+    _reverse [] result = result
+    _reverse (y : ys) result = _reverse ys (y : result)
 
 map :: (a -> b) -> [a] -> [b]
-map f xs = error "You need to implement this function."
+map _ [] = []
+map f (x : xs) = (f x) : map f xs
 
 filter :: (a -> Bool) -> [a] -> [a]
-filter p xs = error "You need to implement this function."
+filter _ [] = []
+filter p (x : xs) | p x = x : filter p xs
+filter p (_ : xs) = filter p xs
 
 (++) :: [a] -> [a] -> [a]
-xs ++ ys = error "You need to implement this function."
+[] ++ ys = ys
+(x : xs) ++ ys = x : (xs ++ ys)
 
 concat :: [[a]] -> [a]
-concat xss = error "You need to implement this function."
+concat [] = []
+concat ([] : xss) = concat xss
+concat ((x : xs) : xss) = x : concat (xs : xss)
