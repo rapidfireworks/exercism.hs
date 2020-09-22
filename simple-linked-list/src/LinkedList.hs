@@ -1,37 +1,37 @@
-module LinkedList
-    ( LinkedList
-    , datum
-    , fromList
-    , isNil
-    , new
-    , next
-    , nil
-    , reverseLinkedList
-    , toList
-    ) where
+module LinkedList (LinkedList, datum, fromList, isNil, new, next, nil, reverseLinkedList, toList) where
 
-data LinkedList a = Dummy deriving (Eq, Show)
+import Data.Foldable (foldr')
+import GHC.OldList (unfoldr)
+
+data LinkedList a = Node a (LinkedList a) | None deriving (Eq, Show)
 
 datum :: LinkedList a -> a
-datum linkedList = error "You need to implement this function."
+datum (Node d _) = d
 
 fromList :: [a] -> LinkedList a
-fromList xs = error "You need to implement this function."
+fromList xs = foldr' Node None xs
 
 isNil :: LinkedList a -> Bool
-isNil linkedList = error "You need to implement this function."
+isNil None = True
+isNil _ = False
 
 new :: a -> LinkedList a -> LinkedList a
-new x linkedList = error "You need to implement this function."
+new = Node
 
 next :: LinkedList a -> LinkedList a
-next linkedList = error "You need to implement this function."
+next (Node _ n) = n
 
 nil :: LinkedList a
-nil = error "You need to implement this function."
+nil = None
 
 reverseLinkedList :: LinkedList a -> LinkedList a
-reverseLinkedList linkedList = error "You need to implement this function."
+reverseLinkedList linkedList = _reverse linkedList None
+  where
+    _reverse None result = result
+    _reverse (Node d n) result = _reverse n (Node d result)
 
 toList :: LinkedList a -> [a]
-toList linkedList = error "You need to implement this function."
+toList linkedList = unfoldr unwrap linkedList
+  where
+    unwrap None = Nothing
+    unwrap (Node d n) = Just (d, n)
