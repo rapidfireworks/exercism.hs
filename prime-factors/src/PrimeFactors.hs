@@ -12,8 +12,9 @@ primeFactors n = _primeFactor n 2
 
 isPrime :: Integer -> Bool
 isPrime n | n < 2 = False
-isPrime n = all notFactor [2 .. truncSqrt n]
+isPrime n = all notFactor $ takeWhile (truncSqrt n >) candid
   where
+    candid = scanl1 (+) (2 : 1 : 2 : cycle [2, 4])
     notFactor = (0 /=) . rem n
 
 truncSqrt :: Integer -> Integer
