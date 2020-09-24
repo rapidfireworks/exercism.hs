@@ -1,6 +1,8 @@
 module Base (Error (..), rebase) where
 
-import Control.Monad (foldM)
+import Control.Monad (foldM, guard)
+import Data.Foldable (toList)
+import Data.Sequence (unfoldl)
 
 data Error a = InvalidInputBase | InvalidOutputBase | InvalidDigit a
   deriving (Show, Eq)
@@ -22,9 +24,6 @@ rebaseFrom inputBase inputDigits
 rebaseTo :: Integral a => a -> a -> Either (Error a) [a]
 rebaseTo outputBase n
   | outputBase < 2 = Left InvalidOutputBase
-  | otherwise = Right $ _rebaseTo outputBase n []
+  | otherwise = Right $ toList $ unfoldl go n
   where
-    _rebaseTo _ 0 result = result
-    _rebaseTo base k result = _rebaseTo base q (r : result)
-      where
-        (q, r) = quotRem k base
+    go k = quotRem k outputBase <$ guard (k /= 0)
