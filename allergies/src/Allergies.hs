@@ -14,7 +14,7 @@ data Allergen
   deriving (Eq, Show, Enum)
 
 allergies :: Int -> [Allergen]
-allergies score = filter (flip isAllergicTo score) [Eggs ..]
+allergies score = filter (`isAllergicTo` score) [Eggs ..]
 
 isAllergicTo :: Allergen -> Int -> Bool
 isAllergicTo allergen score = toScore allergen .&. score /= 0
