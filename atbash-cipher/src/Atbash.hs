@@ -25,9 +25,7 @@ convert x
     result = fromEnum 'z' - fromEnum x + fromEnum 'a'
 
 space :: [Char] -> [Char]
-space [] = []
-space (hd : xs) =
-  hd : do
-    (x, s) <- zip xs $ cycle [Nothing, Nothing, Nothing, Nothing, Just ' ']
-    Just y <- [s, Just x]
-    return y
+space xs = drop 1 $ do
+  (x, s) <- zip xs $ cycle [Just ' ', Nothing, Nothing, Nothing, Nothing]
+  Just y <- [s, Just x]
+  return y
