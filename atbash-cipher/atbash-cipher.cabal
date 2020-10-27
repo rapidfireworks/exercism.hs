@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fafd7d6d54d1a1af8c72e7345e93aeeee585bb493aa2d29941dfe0dab3c9dfcd
+-- hash: 11cd7c962e4997df31d332e55a6e4f33701c78d44d771dd9a58b6b08fbc43ce9
 
 name:           atbash-cipher
 version:        1.2.0.7
@@ -20,6 +20,7 @@ library
   ghc-options: -Wall
   build-depends:
       base
+    , text
   default-language: Haskell2010
 
 test-suite test
