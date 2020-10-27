@@ -1,21 +1,17 @@
 module Atbash (decode, encode) where
 
-import Data.Char (isAlpha, isAlphaNum, toLower)
-import Data.Function ((&))
+import Data.Char (isAlpha, isAlphaNum)
+import Data.Text (Text)
+import qualified Data.Text as T
 
-decode :: String -> String
-decode cipherText =
-  sanitize cipherText
-    & map convert
+decode :: Text -> Text
+decode = T.map convert . sanitize
 
-encode :: String -> String
-encode plainText =
-  sanitize plainText
-    & map convert
-    & space
+encode :: Text -> Text
+encode = space . T.map convert . sanitize
 
-sanitize :: [Char] -> [Char]
-sanitize xs = [toLower x | x <- xs, isAlphaNum x]
+sanitize :: Text -> Text
+sanitize = T.filter isAlphaNum . T.toLower
 
 convert :: Char -> Char
 convert x
@@ -24,8 +20,5 @@ convert x
   where
     result = fromEnum 'z' - fromEnum x + fromEnum 'a'
 
-space :: [Char] -> [Char]
-space xs = drop 1 $ do
-  (x, s) <- zip xs $ cycle [Just ' ', Nothing, Nothing, Nothing, Nothing]
-  Just y <- [s, Just x]
-  return y
+space :: Text -> Text
+space = T.unwords . T.chunksOf 5
