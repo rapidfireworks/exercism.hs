@@ -14,10 +14,8 @@ module Matrix
 where
 
 import Data.Functor ((<&>))
-import qualified Data.Text as T
 import Data.Vector (Vector, (!))
 import qualified Data.Vector as V
-import Text.Read (readMaybe)
 
 data Matrix a = Matrix (Vector (Vector a)) deriving (Eq, Show)
 
@@ -31,15 +29,10 @@ flatten :: Matrix a -> Vector a
 flatten (Matrix xss) = V.concatMap id xss
 
 fromList :: [[a]] -> Matrix a
-fromList xss = Matrix $ V.fromList $ V.fromList <$> xss
+fromList = Matrix . V.fromList . map V.fromList
 
 fromString :: Read a => String -> Matrix a
-fromString xs = fromList $ do
-  line <- T.lines $ T.pack xs
-  return $ do
-    word <- T.words line
-    Just n <- pure $ readMaybe $ T.unpack word
-    return n
+fromString = fromList . map (map read . words) . lines
 
 reshape :: (Int, Int) -> Matrix a -> Matrix a
 reshape (r, c) matrix = Matrix $ do
