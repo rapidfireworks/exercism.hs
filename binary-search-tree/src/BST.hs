@@ -13,35 +13,35 @@ where
 
 import Data.Foldable (foldl')
 
-data BST a = BST (Maybe (a, BST a, BST a)) deriving (Eq, Show)
+data BST a = Empty | BST (a, BST a, BST a) deriving (Eq, Show)
 
 bstLeft :: BST a -> Maybe (BST a)
-bstLeft (BST (Just (_, x, _))) = Just x
+bstLeft (BST (_, x, _)) = Just x
 bstLeft _ = Nothing
 
 bstRight :: BST a -> Maybe (BST a)
-bstRight (BST (Just (_, _, x))) = Just x
+bstRight (BST (_, _, x)) = Just x
 bstRight _ = Nothing
 
 bstValue :: BST a -> Maybe a
-bstValue (BST (Just (x, _, _))) = Just x
+bstValue (BST (x, _, _)) = Just x
 bstValue _ = Nothing
 
 empty :: BST a
-empty = BST Nothing
+empty = Empty
 
 fromList :: Ord a => [a] -> BST a
 fromList xs = foldl' (flip insert) empty xs
 
 insert :: Ord a => a -> BST a -> BST a
-insert x (BST (Just (y, lhs, rhs)))
-  | x > y = BST (Just (y, lhs, insert x rhs))
-  | otherwise = BST (Just (y, insert x lhs, rhs))
+insert x (BST (y, lhs, rhs))
+  | x > y = BST (y, lhs, insert x rhs)
+  | otherwise = BST (y, insert x lhs, rhs)
 insert x _ = singleton x
 
 singleton :: a -> BST a
-singleton x = BST (Just (x, empty, empty))
+singleton x = BST (x, empty, empty)
 
 toList :: BST a -> [a]
-toList (BST (Just (x, lhs, rhs))) = toList lhs ++ x : toList rhs
+toList (BST (x, lhs, rhs)) = toList lhs ++ x : toList rhs
 toList _ = []
