@@ -13,19 +13,20 @@ where
 
 import Data.Foldable (foldl')
 
-data BST a = Empty | BST a (BST a) (BST a) deriving (Eq, Show)
+data BST a = Empty | BST {value :: a, left :: (BST a), right :: (BST a)} deriving (Eq, Show)
+
+toMaybe :: BST a -> Maybe (BST a)
+toMaybe Empty = Nothing
+toMaybe x = Just x
 
 bstLeft :: BST a -> Maybe (BST a)
-bstLeft (BST _ x _) = Just x
-bstLeft _ = Nothing
+bstLeft = fmap left . toMaybe
 
 bstRight :: BST a -> Maybe (BST a)
-bstRight (BST _ _ x) = Just x
-bstRight _ = Nothing
+bstRight = fmap right . toMaybe
 
 bstValue :: BST a -> Maybe a
-bstValue (BST x _ _) = Just x
-bstValue _ = Nothing
+bstValue = fmap value . toMaybe
 
 empty :: BST a
 empty = Empty
