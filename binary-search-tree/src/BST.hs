@@ -13,7 +13,10 @@ where
 
 import Data.Foldable (foldl')
 
-data BST a = Empty | BST {value :: a, left :: (BST a), right :: (BST a)} deriving (Eq, Show)
+data BST a
+  = Empty
+  | BST {value :: a, left :: (BST a), right :: (BST a)}
+  deriving (Eq, Show)
 
 toMaybe :: BST a -> Maybe (BST a)
 toMaybe Empty = Nothing
@@ -44,5 +47,6 @@ singleton :: a -> BST a
 singleton x = BST x Empty Empty
 
 toList :: BST a -> [a]
-toList (BST x lhs rhs) = toList lhs ++ x : toList rhs
-toList _ = []
+toList Empty = []
+toList (BST x Empty Empty) = [x]
+toList (BST x lhs rhs) = [lhs, singleton x, rhs] >>= toList
