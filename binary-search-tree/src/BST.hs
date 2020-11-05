@@ -11,42 +11,41 @@ module BST
   )
 where
 
-import Data.Foldable (foldl')
+import Data.Foldable (foldl', toList)
 
 data BST a
   = Empty
-  | BST {value :: a, left :: (BST a), right :: (BST a)}
+  | Node {left :: (BST a), value :: a, right :: (BST a)}
   deriving (Eq, Show)
 
-toMaybe :: BST a -> Maybe (BST a)
-toMaybe Empty = Nothing
-toMaybe x = Just x
+instance Foldable BST where
+  foldMap _ Empty = mempty
+  foldMap f (Node l k r) = foldMap f l `mappend` f k `mappend` foldMap f r
+
+maybeNode :: BST a -> Maybe (BST a)
+maybeNode Empty = Nothing
+maybeNode x = Just x
 
 bstLeft :: BST a -> Maybe (BST a)
-bstLeft = fmap left . toMaybe
+bstLeft = fmap left . maybeNode
 
 bstRight :: BST a -> Maybe (BST a)
-bstRight = fmap right . toMaybe
+bstRight = fmap right . maybeNode
 
 bstValue :: BST a -> Maybe a
-bstValue = fmap value . toMaybe
+bstValue = fmap value . maybeNode
 
 empty :: BST a
 empty = Empty
 
 fromList :: Ord a => [a] -> BST a
-fromList xs = foldl' (flip insert) Empty xs
+fromList = foldl' (flip insert) empty
 
 insert :: Ord a => a -> BST a -> BST a
-insert x (BST y lhs rhs)
-  | x > y = BST y lhs (insert x rhs)
-  | otherwise = BST y (insert x lhs) rhs
-insert x _ = singleton x
+insert x Empty = singleton x
+insert x (Node l y r)
+  | x > y = Node l y (insert x r)
+  | otherwise = Node (insert x l) y r
 
 singleton :: a -> BST a
-singleton x = BST x Empty Empty
-
-toList :: BST a -> [a]
-toList Empty = []
-toList (BST x Empty Empty) = [x]
-toList (BST x lhs rhs) = [lhs, singleton x, rhs] >>= toList
+singleton = flip (Node empty) empty
