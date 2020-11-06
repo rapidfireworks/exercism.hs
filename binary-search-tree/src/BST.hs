@@ -11,7 +11,7 @@ module BST
   )
 where
 
-import Data.Foldable (foldl', toList)
+import Data.Foldable (foldl')
 
 data BST a
   = Empty
@@ -49,3 +49,6 @@ insert x (Node l y r)
 
 singleton :: a -> BST a
 singleton = flip (Node empty) empty
+
+toList :: BST a -> [a]
+toList = foldr (:) []
