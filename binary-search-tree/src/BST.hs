@@ -19,8 +19,8 @@ data BST a
   deriving (Eq, Show)
 
 instance Foldable BST where
-  foldMap _ Empty = mempty
-  foldMap f (Node l k r) = foldMap f l `mappend` f k `mappend` foldMap f r
+  foldr _ acc Empty = acc
+  foldr f acc (Node l x r) = foldr f (f x (foldr f acc r)) l
 
 maybeNode :: BST a -> Maybe (BST a)
 maybeNode Empty = Nothing
