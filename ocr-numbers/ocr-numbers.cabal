@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cc28ce97cdd43cc7f76ccb2203d6f94e41d4cf62b4bea55e739598b6df341142
+-- hash: 32952e1ed56e9a1274d12c14e22251ffbdcdcd2072df6c90f41750bb756e3130
 
 name:           ocr-numbers
 version:        1.2.0.6
@@ -20,6 +20,7 @@ library
   ghc-options: -Wall
   build-depends:
       base
+    , split
   default-language: Haskell2010
 
 test-suite test
@@ -33,4 +34,5 @@ test-suite test
       base
     , hspec
     , ocr-numbers
+    , split
   default-language: Haskell2010
